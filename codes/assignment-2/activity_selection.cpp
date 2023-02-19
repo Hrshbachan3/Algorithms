@@ -3,8 +3,7 @@
 // print first job
 // choose next activity such that : FT[i-1]<=ST[i]
 
-// time complexity : O()
-// auxiliary space : O()
+// time complexity : O(n^2*log(n))
 
 #include<iostream>
 #include<bits/stdc++.h>
@@ -40,6 +39,7 @@ int main() {
     sort(job,job+n,comp);
 
     for(int i=0;i<n;i++) {
+        
         cout<<"["<<job[i].id<<","<<job[i].ST<<","<<job[i].FT<<"]";
     }
 
@@ -53,14 +53,23 @@ int main() {
         if(i==0) {
             result[i]=job[i].id;
         }
+
         else {
-            if(job[i-1].FT<=job[i].ST) {
-                result[i] = job[i].id;
+
+            for (int j=i;j<n;j++) {
+
+                if(job[i-1].FT<=job[j].ST) {
+
+                    result[i] = job[j].id;
+                    i=j;
+                    break;
+                }
             }
         }
+        
     }
 
-    cout<<"answer: ";
+    cout<<endl<<"answer: ";
 
     for(int i=0;i<n;i++) {
         if(result[i]!=0) {
