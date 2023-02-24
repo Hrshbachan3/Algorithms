@@ -5,7 +5,7 @@ int binarysearchiterative(int A[], int high, int low, int target) {
 
     while(high>=low) {
         
-        int mid = low + (high-low)/2;
+        int mid = low + (high-low)/2;eiyrgfeoriheroig
 
         if(target==A[mid]) {
             return mid;
