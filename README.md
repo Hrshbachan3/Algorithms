@@ -5,6 +5,9 @@ probably no mistakes, but if you find something do inform.
 
 activity_selection.cpp updated with working solution am dumb.
 
+adding assignment 3 (Dynamic programming) solutions. (1/5 done)
+the places wherever u see "??????????????" is proof that vectors need to be taught in a better way, just linear doesnt make the cut.
+
 PS: me rn
 
 
