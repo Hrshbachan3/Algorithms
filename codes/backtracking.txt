@@ -1,0 +1,257 @@
+NQUEEN 
+
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define N 100
+
+int board[N][N];
+
+bool isSafe(int row, int col, int n) {
+    for(int i=0; i<row; i++) {
+        if(board[i][col]) return false;
+    }
+    for(int i=row, j=col; i>=0 && j>=0; i--, j--) {
+        if(board[i][j]) return false;
+    }
+    for(int i=row, j=col; i>=0 && j<n; i--, j++) {
+        if(board[i][j]) return false;
+    }
+    return true;
+}
+
+bool solveNQueen(int row, int n) {
+    if(row == n) {
+        return true;
+    }
+    for(int col=0; col<n; col++) {
+        if(isSafe(row, col, n)) {
+            board[row][col] = 1;
+            if(solveNQueen(row+1, n)) {
+                return true;
+            }
+            board[row][col] = 0;
+        }
+    }
+    return false;
+}
+
+void printBoard(int n) {
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            
+            if(board[i][j] ==1) {
+                cout << "Q" << " ";
+            }
+            else {
+                cout<< "- ";
+            }
+            
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of queens: ";
+    cin >> n;
+
+    if(solveNQueen(0, n)) {
+        printBoard(n);
+    } else {
+        cout << "No solution found for " << n << " queens." << endl;
+    }
+
+    return 0;
+}
+
+SUMSET SUM
+
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+bool isSubsetSum(int set[], int n, int sum) {
+    if(sum == 0) {
+        return true;
+    }
+    if(n == 0) {
+        return false;
+    }
+    if(set[n-1] > sum) {
+        return isSubsetSum(set, n-1, sum);
+    }
+    return isSubsetSum(set, n-1, sum) || isSubsetSum(set, n-1, sum-set[n-1]);
+}
+
+int main() {
+    int set[] = {3, 34, 4, 12, 5, 2};
+    int n = sizeof(set) / sizeof(set[0]);
+    int sum = 9;
+
+    if(isSubsetSum(set, n, sum)) {
+        cout << "Found a subset with sum = " << sum << endl;
+    } else {
+        cout << "No subset found with sum = " << sum << endl;
+    }
+
+    return 0;
+}
+
+GRAPH COLORING  #include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define V 4
+
+bool isSafe(int v, int graph[V][V], int color[], int c) {
+    for(int i=0; i<V; i++) {
+        if(graph[v][i] && c == color[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool graphColoring(int graph[V][V], int m) {
+    int color[V];
+    memset(color, 0, sizeof(color));
+    for(int v=0; v<V; v++) {
+        for(int c=1; c<=m; c++) {
+            if(isSafe(v, graph, color, c)) {
+                color[v] = c;
+                break;
+            }
+            if(c == m) {
+                return false;
+            }
+        }
+    }
+    for(int i=0; i<V; i++) {
+        cout << "Vertex " << i << ": Color " << color[i] << endl;
+    }
+    return true;
+}
+
+int main() {
+    int graph[V][V] = {{0, 1, 1, 1},
+                       {1, 0, 1, 0},
+                       {1, 1, 0, 1},
+                       {1, 0, 1, 0}};
+    int m = 3;
+
+    if(!graphColoring(graph, m)) {
+        cout << "No solution exists." << endl;
+    }
+
+    return 0;
+}
+
+0-1 KNAPSACK
+
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int knapsack(int W, int wt[], int val[], int n, int cur_w, int cur_v) {
+    if(cur_w > W) {
+        return -1;
+    }
+    if(n == 0) {
+        return cur_v;
+    }
+    int included = knapsack(W, wt, val, n-1, cur_w+wt[n-1], cur_v+val[n-1]);
+    int not_included = knapsack(W, wt, val, n-1, cur_w, cur_v);
+    if(included == -1) {
+        return not_included;
+    }
+    if(not_included == -1) {
+        return included;
+    }
+    return max(included, not_included);
+}
+
+int main() {
+    int val[] = {60, 100, 120};
+    int wt[] = {10, 20, 30};
+    int W = 50;
+    int n = sizeof(val)/sizeof(val[0]);
+    cout << "Maximum value: " << knapsack(W, wt, val, n, 0, 0) << endl;
+    return 0;
+}
+
+HAMILTONIAN CYCLE
+
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int MAX = 10;
+
+int n, graph[MAX][MAX], path[MAX];
+
+bool isSafe(int v, int pos) {
+    if(graph[path[pos-1]][v] == 0) {
+        return false;
+    }
+    for(int i=0; i<pos; i++) {
+        if(path[i] == v) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool hamiltonianCycle(int pos) {
+    if(pos == n) {
+        if(graph[path[pos-1]][path[0]] == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    for(int v=1; v<n; v++) {
+        if(isSafe(v, pos)) {
+            path[pos] = v;
+            if(hamiltonianCycle(pos+1)) {
+                return true;
+            }
+            path[pos] = -1;
+        }
+    }
+    return false;
+}
+
+int main() {
+    n = 5;
+    memset(graph, 0, sizeof(graph));
+    graph[0][1] = graph[1][0] = 1;
+    graph[0][4] = graph[4][0] = 1;
+    graph[1][2] = graph[2][1] = 1;
+    graph[1][3] = graph[3][1] = 1;
+    graph[1][4] = graph[4][1] = 1;
+    graph[2][3] = graph[3][2] = 1;
+    graph[3][4] = graph[4][3] = 1;
+    
+    memset(path, -1, sizeof(path));
+    path[0] = 0;
+    
+    if(hamiltonianCycle(1)) {
+        cout << "Hamiltonian Cycle exists: ";
+        for(int i=0; i<n; i++) {
+            cout << path[i] << " ";
+        }
+        cout << path[0] << endl;
+    } else {
+        cout << "Hamiltonian Cycle does not exist" << endl;
+    }
+    
+    return 0;
+}
